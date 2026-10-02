@@ -1,0 +1,17 @@
+{
+  "name": "Jewellery, Indore",
+  "short_name": "Jewellery",
+  "description": "BIS hallmarked gold and certified diamonds, handcrafted in Indore since 2009.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbf8f3",
+  "theme_color": "#16110f",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
