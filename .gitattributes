@@ -1,0 +1,8 @@
+# Keep line endings stable across Windows and Linux checkouts. Without this,
+# git rewrites LF to CRLF on every fresh clone on Windows and the whole tree
+# shows up as modified.
+* text=auto eol=lf
+
+*.jpg binary
+*.png binary
+*.svg text

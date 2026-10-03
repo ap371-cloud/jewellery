@@ -1,0 +1,31 @@
+/* Design tokens, reset and the two rules every page shares.
+   Loaded first on every page; site.css and legal.css follow it. */
+
+:root{
+  --ink:#16110f; --ink2:#4d423b;
+  --gold:#c39b3d; --gold2:#e7cd85; --gold3:#8a6a19;
+  --cream:#fbf8f3; --white:#fff; --em:#1d6f5c;
+  --serif:"Didot","Bodoni MT","Playfair Display",Georgia,serif;
+  --sans:"Futura","Avenir Next","Century Gothic",system-ui,sans-serif;
+  --e:cubic-bezier(.22,.61,.36,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.65}
+a{color:inherit}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* Scroll reveal. Elements start hidden and are unhidden by reveal.js, which
+   skips the whole mechanism when the visitor prefers reduced motion. */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .9s var(--e),transform .9s var(--e)}
+.rv.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  *{animation:none!important;transition-duration:.01ms!important}
+}
+
+/* Content that only screen readers should announce. */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}

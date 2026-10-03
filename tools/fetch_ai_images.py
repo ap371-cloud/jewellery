@@ -1,26 +1,26 @@
 """Fetch photorealistic jewellery imagery from the free Pollinations API.
 
 No API key and no account are required. Prompts are written for
-product-photography style output, then each response is written into ./assets
+product-photography style output, then each response is written into ../assets
 using the exact filenames index.html already references, so nothing else in the
 site needs to change.
 
-Run:
-    python fetch_ai_images.py
+    python -m tools.fetch_ai_images
+    python -m tools.fetch_ai_images --only product-solitaire
 
-Pass --only slug to regenerate a single image, e.g.
-    python fetch_ai_images.py --only product-solitaire
+This is the optional counterpart to build_images.py: run it when you want real
+photography rather than drawn artwork.
 """
 from __future__ import annotations
 
 import argparse
+import sys
 import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent / "assets"
-OUT.mkdir(parents=True, exist_ok=True)
+from .slugs import ASSETS as OUT
 
 BASE = "https://image.pollinations.ai/prompt/"
 
@@ -62,6 +62,56 @@ TARGETS = {
     "product-drops": (
         FLATLAY + "a pair of rose gold teardrop earrings with small diamond "
         "tops, lying side by side on pale silk, " + STYLE
+    ),
+    "product-halo": (
+        FLATLAY + "a slim rose gold ring with a thin open circle of small "
+        "diamonds surrounding the finger, standing upright on cream stone, " + STYLE
+    ),
+    "product-emerald": (
+        FLATLAY + "a yellow gold ring set with one large rectangular step cut "
+        "emerald and two small diamonds either side of it, " + STYLE
+    ),
+    "product-jhumka": (
+        FLATLAY + "a pair of ornate antique gold jhumka earrings with domed "
+        "tops, pearl drops and fine fringe chains, laid flat on deep red silk, " + STYLE
+    ),
+    "product-studs": (
+        FLATLAY + "a pair of platinum stud earrings each holding a single "
+        "round sapphire, resting on a pale grey stone slab, " + STYLE
+    ),
+    "product-rani": (
+        FLATLAY + "a long antique gold rani haar necklace made of small "
+        "repeating floral links, arranged in a wide U on ivory silk, " + STYLE
+    ),
+    "product-choker": (
+        FLATLAY + "a close fitting yellow gold choker necklace set all round "
+        "with alternating round diamonds, laid flat in a neat oval, " + STYLE
+    ),
+    "product-pendant": (
+        FLATLAY + "a fine yellow gold chain with a single small round "
+        "laboratory grown diamond pendant, chain coiled loosely, " + STYLE
+    ),
+    "product-bangles": (
+        FLATLAY + "a stack of four wide textured gold bangles lying flat "
+        "together, one pair open with small hooks, " + STYLE
+    ),
+    "product-bracelet": (
+        FLATLAY + "a platinum tennis bracelet set in a single line of round "
+        "diamonds with a hidden clasp, laid in a soft curve, " + STYLE
+    ),
+    "product-lehenga": (
+        FLATLAY + "a complete bridal jewellery set arranged on deep maroon "
+        "velvet: a heavy choker, a long haar, a jhumka pair, a maang tikka, "
+        "two bangles and a ring, " + STYLE
+    ),
+    "product-coin": (
+        FLATLAY + "a single gold Lakshmi coin standing on its edge next to a "
+        "small stack of three more coins on cream silk, milled edges visible, "
+        + STYLE
+    ),
+    "product-silvercoin": (
+        FLATLAY + "a heavy silver bullion coin lying flat beside three smaller "
+        "silver coins on a dark slate surface, high shine, " + STYLE
     ),
     "look-sitara": (
         FLATLAY + "a rose gold pendant necklace with a diamond pendant resting "
@@ -147,12 +197,13 @@ def fetch(slug: str, prompt: str, seed: int = 0) -> tuple[int, int, int]:
     return w, h, path.stat().st_size
 
 
-def main() -> None:
-    ap = argparse.ArgumentParser()
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--only", help="regenerate a single slug")
     ap.add_argument("--sleep", type=float, default=3.0, help="delay between calls")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
+    OUT.mkdir(parents=True, exist_ok=True)
     slugs = [args.only] if args.only else list(TARGETS)
     ok = 0
     for i, slug in enumerate(slugs):
@@ -177,7 +228,8 @@ def main() -> None:
             time.sleep(args.sleep)
 
     print(f"\n{ok}/{len(slugs)} generated into {OUT}")
+    return 0 if ok == len(slugs) else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
